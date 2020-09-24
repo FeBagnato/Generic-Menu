@@ -1,5 +1,7 @@
 #include<iostream>
 #include<ncurses.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 using namespace std;
 
 int main(){
@@ -7,6 +9,12 @@ int main(){
   int optionsConf[4] = {0,0,0,0};
   int optionLocation = 1;
 
+  // Get the number of rows in the terminal
+  struct winsize size;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+  int terminalRow = size.ws_row;
+
+  // Start the functions to manipulate the screen
   initscr();
   start_color();
   use_default_colors();
@@ -14,6 +22,7 @@ int main(){
   init_pair(2, COLOR_GREEN, -1);
   init_pair(3, COLOR_WHITE, COLOR_BLUE);
 
+  // Menu loop
   do{
     if(optionLocation == 1){
       attron(COLOR_PAIR(2));
@@ -56,15 +65,33 @@ int main(){
       else printw("OPTION 4  [OFF]\n");
     }
 
+    // Show the option keys
     attron(COLOR_PAIR(3));
-    printw("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    for(int i = terminalRow - 5; i > 0; i--) printw("\n");
     printw("Arrows[move]  Q[exit]  Enter[turn on/off]\n");
     c = getch();
     clear();
 
+    // Compare the keys with the options
     if(c == 'q') break;
     else if(c == 'A' && optionLocation != 1) optionLocation--;
     else if(c == 'B' && optionLocation != 4) optionLocation++;
+    else if(c == '\n'){
+      switch(optionLocation){
+        case 1:
+          optionsConf[0] = 1;
+          break;
+        case 2:
+          optionsConf[1] = 1;
+          break;
+        case 3:
+          optionsConf[2] = 1;
+          break;
+        case 4:
+          optionsConf[3] = 1;
+          break;
+      }
+    }
   } while(1);
   endwin();
 
