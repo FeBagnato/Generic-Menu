@@ -73,27 +73,29 @@ int main(){
     clear();
 
     // Compare the keys with the options
-    if(c == 'q') break;
-    else if(c == 'A' && optionLocation != 1) optionLocation--;
+    if(c == 'A' && optionLocation != 1) optionLocation--;
     else if(c == 'B' && optionLocation != 4) optionLocation++;
     else if(c == '\n'){
       switch(optionLocation){
         case 1:
-          optionsConf[0] = 1;
+          if(optionsConf[0] == 0) optionsConf[0] = 1;
+          else optionsConf[0] = 0;
           break;
         case 2:
-          optionsConf[1] = 1;
+          if(optionsConf[1] == 0) optionsConf[1] = 1;
+          else optionsConf[1] = 0;
           break;
         case 3:
-          optionsConf[2] = 1;
+          if(optionsConf[2] == 0) optionsConf[2] = 1;
+          else optionsConf[2] = 0;
           break;
         case 4:
-          optionsConf[3] = 1;
+          if(optionsConf[3] == 0) optionsConf[3] = 1;
+          else optionsConf[3] = 0;
           break;
       }
     }
-  } while(1);
+  } while(c != 'q');
   endwin();
-
   return 0;
 }
